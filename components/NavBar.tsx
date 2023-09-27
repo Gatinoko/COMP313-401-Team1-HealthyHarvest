@@ -10,6 +10,8 @@ import {
   Link,
   Button,
 } from '@nextui-org/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 const NavBar = () => {
   const [user, setUser] = useState(null);
@@ -22,8 +24,8 @@ const NavBar = () => {
 
       <NavbarContent justify='end'>
         <NavbarItem className='hidden lg:flex'>
-          <div className='flex items-center gap-1'>
-            <p className='font-bold text-inherit'>Search</p>
+          <div className='flex items-center gap-2'>
+            <FontAwesomeIcon size='lg' icon={faMagnifyingGlass} />
             <Input className='border rounded-xl' />
           </div>
         </NavbarItem>
