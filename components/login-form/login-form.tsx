@@ -22,7 +22,7 @@ export default function LoginForm() {
 				type='text'
 				label='Email'
 				name='email'
-				required
+				isRequired={true}
 			/>
 
 			{/* Password input field */}
@@ -31,7 +31,7 @@ export default function LoginForm() {
 				type='password'
 				label='Password'
 				name='password'
-				required
+				isRequired={true}
 			/>
 
 			{/* Form error message */}
