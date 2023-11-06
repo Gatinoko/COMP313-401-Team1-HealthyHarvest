@@ -4,9 +4,14 @@ import { redirect } from 'next/navigation';
 import prismaClient from '@/prisma/prisma';
 import { createUserSchema, loginUserSchema } from '../schemas/user-schemas';
 import { Error } from '@/types/action-types';
+import passport from 'passport';
+import jwt from 'jsonwebtoken';
+import { MAX_AGE, TOKEN_SECRET } from '@/auth/auth-config';
+import { cookies } from 'next/headers';
+import { revalidatePath } from 'next/cache';
 
 /**
- * Form action for the user sign-up form.
+ * Server action for the user sign-up form.
  *
  * @param {FormData} data - Client form data.
  */
@@ -81,16 +86,23 @@ export async function signUpUser(data: FormData) {
 		} as Error;
 	}
 
-	// Revalidate page
+	// Redirects user to login page
 	redirect('/login');
 }
 
 /**
- * Form action for the user login form.
+ * Server action for the user login form.
  *
  * @param {FormData} data - Client form data.
  */
 export async function loginUser(data: FormData) {
+	// Checks if token cookie is already present in the browser
+	if (cookies().get('token'))
+		return {
+			message: 'User already authenticated.',
+			cause: 'ALREADY_AUTHENTICATED',
+		} as Error;
+
 	// Assigns form values to object
 	const formValues = {
 		email: data.get('email') as string,
@@ -129,9 +141,28 @@ export async function loginUser(data: FormData) {
 			cause: 'INCORRECT_CREDENTIALS',
 		} as Error;
 
-	// Auth logic here
-	console.log('hey we reached the auth part. yay.');
+	// Authenticates user and creates session with passport
+	try {
+		const token = jwt.sign(
+			{
+				firstName: user.firstName,
+				lastName: user.lastName,
+				email: user.email,
+				username: user.username,
+			},
+			TOKEN_SECRET
+		);
+		cookies().set('token', token, {
+			maxAge: MAX_AGE,
+		});
+		passport.authenticate('jwt');
+	} catch (error: any) {
+		return {
+			message: 'Authentication error.',
+			cause: 'AUTH_ERROR',
+		} as Error;
+	}
 
 	// Revalidates path
-	redirect('/login');
+	revalidatePath('/login');
 }
