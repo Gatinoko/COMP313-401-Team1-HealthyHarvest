@@ -65,13 +65,13 @@ export default function Navbar({ jwtToken }: NavigationProps) {
           <>
             {/* Search input */}
             <NavbarItem className='hidden lg:flex'>
-              <div className='flex items-center gap-2'>
-                <FontAwesomeIcon size='lg' icon={faMagnifyingGlass} />
-                <Input
-                  className='border rounded-xl'
-                  placeholder='Salads, bean soup...'
-                />
-              </div>
+              <Input
+                className='border rounded-xl'
+                placeholder='Salads, bean soup...'
+                endContent={
+                  <FontAwesomeIcon size='lg' icon={faMagnifyingGlass} />
+                }
+              />
             </NavbarItem>
 
             {/* Avatar with dropdown menu */}
