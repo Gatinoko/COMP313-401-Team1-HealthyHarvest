@@ -15,6 +15,7 @@ export default function SignUpForm() {
 		const serverResponse = await signUpUser(formData);
 		if (serverResponse) setErrorMessage(serverResponse.message);
 		else {
+			console.log(errorMessage)
 			formElementRef.current?.reset();
 			setErrorMessage('‎ ');
 		}

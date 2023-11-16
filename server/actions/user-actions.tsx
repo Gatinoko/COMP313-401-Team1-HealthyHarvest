@@ -40,7 +40,7 @@ export async function signUpUser(data: FormData) {
 		});
 	} catch (error: any) {
 		return {
-			message: 'Database error.',
+			message: error.message,
 			cause: 'DB_ERROR',
 		} as Error;
 	}
@@ -61,7 +61,7 @@ export async function signUpUser(data: FormData) {
 		});
 	} catch (error: any) {
 		return {
-			message: 'Database error.',
+			message: error.message,
 			cause: 'DB_ERROR',
 		} as Error;
 	}
@@ -81,7 +81,7 @@ export async function signUpUser(data: FormData) {
 	} catch (error: any) {
 		console.log(error);
 		return {
-			message: 'Database error.',
+			message: error.message,
 			cause: 'DB_ERROR',
 		} as Error;
 	}
@@ -122,7 +122,7 @@ export async function loginUser(data: FormData) {
 		});
 	} catch (error: any) {
 		return {
-			message: 'Database error.',
+			message: error.message,
 			cause: 'DB_ERROR',
 		} as Error;
 	}
