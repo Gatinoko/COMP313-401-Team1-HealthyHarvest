@@ -26,6 +26,8 @@ export const createRecipeSchema = z.object({
     prepTime: z.string().optional(),
     cookTime: z.string().optional(),
     public: z.boolean(),
+    userId: z.string(),
     ingredients: z.array(ingredientSchema),
-    directions: z.array(directionSchema)
+    directions: z.array(directionSchema),
+    note: z.string().optional()
 });
