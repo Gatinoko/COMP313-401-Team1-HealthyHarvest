@@ -1,13 +1,5 @@
 'use client';
 
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Divider,
-  Link,
-} from '@nextui-org/react';
 import Image from 'next/image';
 
 export default function Home() {
