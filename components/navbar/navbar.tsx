@@ -14,9 +14,9 @@ import {
   DropdownMenu,
   DropdownItem,
   Input,
+  Image,
 } from '@nextui-org/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import magnifyingGlassIcon from '@/public/icons/magnifying-glass-solid.svg';
 import { useRouter } from 'next/navigation';
 ('./login-signup-buttons/nav-content');
 import { useContext } from 'react';
@@ -69,7 +69,12 @@ export default function Navbar({ jwtToken }: NavigationProps) {
                 className='border rounded-xl'
                 placeholder='Salads, bean soup...'
                 endContent={
-                  <FontAwesomeIcon size='lg' icon={faMagnifyingGlass} />
+                  <Image
+                    alt='search icon'
+                    src='/icons/magnifying-glass-solid.svg'
+                    width={30}
+                    height={30}
+                  />
                 }
               />
             </NavbarItem>
