@@ -22,7 +22,9 @@ export default function LoginForm() {
 		else {
 			formElementRef.current?.reset();
 			setErrorMessage('‎ ');
-			router.refresh();
+			// Redirect to the root URL after successful login
+            router.push('/');
+
 		}
 	}
 
