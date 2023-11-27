@@ -31,19 +31,19 @@ export async function signUpUser(data: FormData) {
   // User variable to be used in credential validation
   let user;
 
-	// Queries database to check if email is already registered
-	try {
-		user = await prismaClient().user.findUnique({
-			where: {
-				email: formValues.email,
-			},
-		});
-	} catch (error: any) {
-		return {
-			message: error.message,
-			cause: 'DB_ERROR',
-		} as Error;
-	}
+  // Queries database to check if email is already registered
+  try {
+    user = await prismaClient().user.findUnique({
+      where: {
+        email: formValues.email,
+      },
+    });
+  } catch (error: any) {
+    return {
+      message: error.message,
+      cause: 'DB_ERROR',
+    } as Error;
+  }
 
   // Returns error if email already exists
   if (user !== null)
@@ -52,19 +52,19 @@ export async function signUpUser(data: FormData) {
       cause: 'EMAIL_ALREADY_EXISTS',
     } as Error;
 
-	// Queries database to check if username already exists
-	try {
-		user = await prismaClient().user.findUnique({
-			where: {
-				username: formValues.username,
-			},
-		});
-	} catch (error: any) {
-		return {
-			message: error.message,
-			cause: 'DB_ERROR',
-		} as Error;
-	}
+  // Queries database to check if username already exists
+  try {
+    user = await prismaClient().user.findUnique({
+      where: {
+        username: formValues.username,
+      },
+    });
+  } catch (error: any) {
+    return {
+      message: error.message,
+      cause: 'DB_ERROR',
+    } as Error;
+  }
 
   // Returns error if username already exists
   if (user !== null)
@@ -73,18 +73,18 @@ export async function signUpUser(data: FormData) {
       cause: 'USERNAME_ALREADY_EXISTS',
     } as Error;
 
-	// If all checks passed, create user database operation
-	try {
-		await prismaClient().user.create({
-			data: formValues,
-		});
-	} catch (error: any) {
-		console.log(error);
-		return {
-			message: error.message,
-			cause: 'DB_ERROR',
-		} as Error;
-	}
+  // If all checks passed, create user database operation
+  try {
+    await prismaClient().user.create({
+      data: formValues,
+    });
+  } catch (error: any) {
+    console.log(error);
+    return {
+      message: 'Database error.',
+      cause: 'DB_ERROR',
+    } as Error;
+  }
 
   // Redirects user to login page
   redirect('/login');
@@ -112,20 +112,20 @@ export async function loginUser(data: FormData) {
   // Zod form schema validation
   loginUserSchema.parse(formValues);
 
-	// Find user database operation
-	let user;
-	try {
-		user = await prismaClient().user.findUnique({
-			where: {
-				email: formValues.email,
-			},
-		});
-	} catch (error: any) {
-		return {
-			message: error.message,
-			cause: 'DB_ERROR',
-		} as Error;
-	}
+  // Find user database operation
+  let user;
+  try {
+    user = await prismaClient().user.findUnique({
+      where: {
+        email: formValues.email,
+      },
+    });
+  } catch (error: any) {
+    return {
+      message: 'Database error.',
+      cause: 'DB_ERROR',
+    } as Error;
+  }
 
   // If no user is found return error
   if (user === null)

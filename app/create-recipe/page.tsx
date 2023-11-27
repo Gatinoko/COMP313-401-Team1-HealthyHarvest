@@ -18,6 +18,7 @@ import {
   Radio,
 } from '@nextui-org/react';
 import { useState } from 'react';
+import Image from 'next/image';
 
 export default function CreateRecipe() {
   const [ingredients, setIngredients] = useState([
@@ -66,7 +67,14 @@ export default function CreateRecipe() {
             label='Recipe Title'
             placeholder='recipe title'
             labelPlacement='outside'
-            startContent={<FontAwesomeIcon icon={faMagnifyingGlass} />}
+            startContent={
+              <Image
+                alt='search icon'
+                src='/icons/magnifying-glass-solid.svg'
+                width={20}
+                height={20}
+              />
+            }
           />
           <Input
             type='file'
@@ -88,11 +96,12 @@ export default function CreateRecipe() {
         {ingredients.map(({ id, placeholder }) => (
           <div key={id} className='flex gap-2 justify-center items-center'>
             <Input type='text' placeholder={placeholder} />
-            <FontAwesomeIcon
+            <Image
+              alt='search icon'
+              src='/icons/circle-xmark-solid.svg'
+              width={25}
+              height={25}
               className='cursor-pointer'
-              size='xl'
-              icon={faCircleXmark}
-              onClick={() => removeIngredient(id)}
             />
           </div>
         ))}
@@ -112,11 +121,12 @@ export default function CreateRecipe() {
         {directions.map(({ id, placeholder }) => (
           <div key={id} className='flex gap-2 justify-center items-start'>
             <Textarea type='text' placeholder={placeholder} />
-            <FontAwesomeIcon
-              className='cursor-pointer mt-4'
-              size='xl'
-              icon={faCircleXmark}
-              onClick={() => removeDirection(id)}
+            <Image
+              alt='search icon'
+              src='/icons/circle-xmark-solid.svg'
+              width={25}
+              height={25}
+              className='mt-2 cursor-pointer'
             />
           </div>
         ))}
@@ -182,7 +192,14 @@ export default function CreateRecipe() {
           variant='bordered'
           className='w-fit text-black'
           size='lg'
-          startContent={<FontAwesomeIcon icon={faPlus} />}
+          startContent={
+            <Image
+              alt='search icon'
+              src='/icons/plus-solid.svg'
+              width={20}
+              height={20}
+            />
+          }
         >
           Add Note
         </Button>
