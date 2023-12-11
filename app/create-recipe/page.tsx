@@ -1,6 +1,5 @@
 'use client';
 
-import { v4 as uuidv4 } from 'uuid';
 import {
   Button,
   Divider,
@@ -16,7 +15,8 @@ import Image from 'next/image';
 import { useContext } from 'react';
 import { AuthContext } from '@/context/auth-context';
 import { createRecipe } from '@/server/actions/recipe-actions';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { UploadButton } from '@/util/uploadthing';
 
 export default function CreateRecipe() {
   const { authInformation } = useContext(AuthContext);
@@ -86,6 +86,8 @@ export default function CreateRecipe() {
     setDirections((prev) => directionsClone);
   }
 
+  const router = useRouter();
+
   async function submitForm(e: FormEvent) {
     e.preventDefault();
 
@@ -94,7 +96,7 @@ export default function CreateRecipe() {
 
     try {
       await createRecipe(newBody);
-      redirect('/');
+      router.push('/');
     } catch (error) {
       console.log(error);
     }
@@ -125,12 +127,17 @@ export default function CreateRecipe() {
               />
             }
           />
-          <Input
-            type='file'
-            label='Image Upload'
-            placeholder='recipe title'
-            labelPlacement='outside'
-            className=''
+          <UploadButton
+            endpoint='imageUploader'
+            onClientUploadComplete={(res) => {
+              console.log('Upload successful');
+              const bodyClone = { ...body, imageUrl: res[0].url };
+              setBody((prev) => bodyClone);
+            }}
+            onUploadError={(error: Error) => {
+              // Do something with the error.
+              alert(`ERROR! ${error.message}`);
+            }}
           />
         </div>
         <Textarea

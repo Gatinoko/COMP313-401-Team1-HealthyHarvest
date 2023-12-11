@@ -32,3 +32,19 @@ export type RecipeForm = {
   directions: string[];
   note: string;
 };
+
+export type Recipe = {
+  id: string;
+  title: string;
+  imageUrl: string;
+  description: string;
+  servings: number;
+  yieldAmount: number;
+  prepTime: string;
+  cookTime: string;
+  isPublic: boolean;
+  userId: string;
+  ingredients: string;
+  directions: string;
+  note: string;
+};

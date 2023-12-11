@@ -83,6 +83,21 @@ export async function getRecipesByUser(userId: string) {
   }
 }
 
+export async function getAllRecipes() {
+  try {
+    console.log('getAllRecipes');
+    const recipes = await prismaClient().recipe.findMany();
+    console.log('return recipes');
+    return recipes;
+  } catch (error: any) {
+    console.log(error);
+    return {
+      message: error.message,
+      cause: 'DB_ERROR',
+    };
+  }
+}
+
 //update a recipe
 export async function updateRecipe(
   recipeId: string,
