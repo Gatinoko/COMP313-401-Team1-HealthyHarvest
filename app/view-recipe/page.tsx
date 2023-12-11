@@ -13,12 +13,12 @@ const ViewRecipe = () => {
       <p>
         I&apos;m going to show you this very old-school method of making beef
         tips, which, once made, can be used to top lots of things—but my
-        favorite thing to top with tips is probably Tater Tots®. And if you're
-        looking for new ways to prepare lean, cheap, tough cuts of beef, this is
-        one of my all-time favorite methods. You can give this an upgrade by
-        topping with diced red onion, grated Cheddar cheese, and freshly sliced
-        green onions, or you can serve the beef tips over hot mashed potatoes
-        instead of tots, if you like.
+        favorite thing to top with tips is probably Tater Tots®. And if
+        you&apos;re looking for new ways to prepare lean, cheap, tough cuts of
+        beef, this is one of my all-time favorite methods. You can give this an
+        upgrade by topping with diced red onion, grated Cheddar cheese, and
+        freshly sliced green onions, or you can serve the beef tips over hot
+        mashed potatoes instead of tots, if you like.
       </p>
       <div className='flex gap-3 text-xl'>
         <p>

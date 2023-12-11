@@ -46,6 +46,7 @@ export default function Navbar({ jwtToken }: NavigationProps) {
     if (jwtToken)
       setAuthInformation({
         isAuthenticated: true,
+        id: jwtToken.id,
         firstName: jwtToken.firstName,
         lastName: jwtToken.lastName,
         email: jwtToken.email,

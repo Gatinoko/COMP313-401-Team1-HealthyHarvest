@@ -5,8 +5,8 @@
  * @param cause - Cause of error.
  */
 export type Error = {
-	message: string;
-	cause: string;
+  message: string;
+  cause: string;
 };
 
 /**
@@ -15,5 +15,20 @@ export type Error = {
  * @param message - Success message to be displayed in client-side.
  */
 export type SuccessResponse = {
-	message: string;
+  message: string;
+};
+
+export type RecipeForm = {
+  title: string;
+  imageUrl: string;
+  description: string;
+  servings: number;
+  yieldAmount: number;
+  prepTime: string;
+  cookTime: string;
+  isPublic: boolean;
+  userId: string;
+  ingredients: string[];
+  directions: string[];
+  note: string;
 };
