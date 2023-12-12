@@ -20,7 +20,7 @@ export type SuccessResponse = {
 
 export type RecipeForm = {
   title: string;
-  imageUrl: string;
+  imageUrl: string | null;
   description: string;
   servings: number;
   yieldAmount: number;
@@ -30,7 +30,7 @@ export type RecipeForm = {
   userId: string;
   ingredients: string[];
   directions: string[];
-  note: string;
+  note: string | null;
 };
 
 export type Recipe = {

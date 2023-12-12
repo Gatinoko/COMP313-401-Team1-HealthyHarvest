@@ -35,7 +35,7 @@ export default function Navbar({ jwtToken }: NavigationProps) {
 
   // Logout button handler function
   async function logoutButtonHandler() {
-    await fetch('http://localhost:3000/api/auth', {
+    await fetch('/api/auth', {
       method: 'DELETE',
     });
     router.refresh();
@@ -111,6 +111,17 @@ export default function Navbar({ jwtToken }: NavigationProps) {
                     color='primary'
                   >
                     Create Recipe
+                  </Button>
+                </DropdownItem>
+                {/* View Owned Recipes */}
+                <DropdownItem key='view-own-recipes'>
+                  <Button
+                    className='flex justify-center'
+                    as={Link}
+                    href={`/view-user-recipes/${authInformation.id}`}
+                    color='secondary'
+                  >
+                    View Owned Recipes
                   </Button>
                 </DropdownItem>
                 {/* Logout button */}

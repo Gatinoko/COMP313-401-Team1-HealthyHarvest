@@ -71,9 +71,12 @@ export async function getRecipeById(id: string) {
 //Get recipes by user
 export async function getRecipesByUser(userId: string) {
   try {
-    const recipe = await prismaClient().recipe.findMany({
+    console.log('getRecipesByUser ' + userId);
+    const recipes = await prismaClient().recipe.findMany({
       where: { userId: userId },
     });
+    console.log("return user's recipes " + userId);
+    return recipes;
   } catch (error: any) {
     console.log(error);
     return {
@@ -86,7 +89,9 @@ export async function getRecipesByUser(userId: string) {
 export async function getAllRecipes() {
   try {
     console.log('getAllRecipes');
-    const recipes = await prismaClient().recipe.findMany();
+    const recipes = await prismaClient().recipe.findMany({
+      include: { user: true },
+    });
     console.log('return recipes');
     return recipes;
   } catch (error: any) {
@@ -99,23 +104,35 @@ export async function getAllRecipes() {
 }
 
 //update a recipe
-export async function updateRecipe(
-  recipeId: string,
-  data: FormData,
-  currentUser: { userId: string }
-) {
+export async function updateRecipe(recipeId: string, data: RecipeForm) {
+  const {
+    title,
+    imageUrl,
+    description,
+    servings,
+    yieldAmount,
+    prepTime,
+    cookTime,
+    isPublic,
+    userId,
+    ingredients,
+    directions,
+    note,
+  } = data;
+
   const formValues = {
-    title: data.get('title') as string,
-    imageUrl: data.get('imageUrl') as string,
-    description: data.get('desc') as string,
-    servings: Number(data.get('servings')),
-    yield: data.get('yield') as string,
-    prepTime: data.get('prepTime') as string,
-    cookTime: data.get('cookTime') as string,
-    public: data.get('public') === 'true',
-    ingredients: JSON.parse(data.get('ingredients') as string),
-    directions: JSON.parse(data.get('directions') as string),
-    note: data.get('note') as string,
+    title,
+    imageUrl,
+    description,
+    servings: parseInt(servings + ''),
+    yieldAmount: parseInt(yieldAmount + ''),
+    prepTime,
+    cookTime,
+    isPublic,
+    userId,
+    ingredients: JSON.stringify(ingredients),
+    directions: JSON.stringify(directions),
+    note,
   };
 
   const recipe = await prismaClient().recipe.findUnique({
@@ -125,7 +142,7 @@ export async function updateRecipe(
   //check that recipe exists and if the currentUser is the publisher
   if (!recipe) {
     return { message: 'Recipe not found.', cause: 'NOT_FOUND' };
-  } else if (recipe.userId !== currentUser.userId) {
+  } else if (recipe.userId !== formValues.userId) {
     return { message: 'Unauthorized access.', cause: 'UNAUTHORIZED' };
   }
   try {

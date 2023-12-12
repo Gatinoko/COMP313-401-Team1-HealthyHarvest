@@ -167,3 +167,19 @@ export async function loginUser(data: FormData) {
   // Revalidates path
   revalidatePath('/login');
 }
+
+export async function getUserById(userId: string) {
+  try {
+    const user = await prismaClient().user.findUniqueOrThrow({
+      where: {
+        id: userId,
+      },
+    });
+    return user;
+  } catch (error: any) {
+    return {
+      message: 'Database error.',
+      cause: 'DB_ERROR',
+    } as Error;
+  }
+}
