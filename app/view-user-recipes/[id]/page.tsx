@@ -54,7 +54,7 @@ const ViewUserRecipesPage = ({ params }: { params: { id: string } }) => {
           <h1 className='text-4xl text-center font-bold'>
             {authInformation?.id === user.id
               ? 'Your Recipes'
-              : `${user.firstName}&apos;s Recipes`}
+              : `${user.firstName}'s Recipes`}
           </h1>
           <div className='grid grid-cols-3 mt-4 gap-2'>
             {recipes.map(({ id, title, imageUrl }) => (

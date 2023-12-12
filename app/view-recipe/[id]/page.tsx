@@ -4,16 +4,16 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { getRecipeById } from '@/server/actions/recipe-actions';
-import { Recipe } from '@prisma/client';
+import { RecipeWithUser } from '@/types/action-types';
 
 const ViewRecipePage = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
-  const [recipe, setRecipe] = useState<Recipe | null>(null);
+  const [recipe, setRecipe] = useState<RecipeWithUser | null>(null);
 
   useEffect(() => {
     async function recipe() {
       try {
-        const recipe = (await getRecipeById(params.id)) as Recipe;
+        const recipe = (await getRecipeById(params.id)) as RecipeWithUser;
         setRecipe(recipe);
         if (!recipe) router.push('/');
       } catch (error) {
@@ -39,9 +39,10 @@ const ViewRecipePage = ({ params }: { params: { id: string } }) => {
           </div>
           <p>{recipe.description}</p>
           <div className='flex gap-3 text-xl'>
-            <p>
-              Recipe by <span className='underline'>Chef John</span>
-            </p>
+            <a href={`/view-user-recipes/${recipe.userId}`}>
+              Recipe by{' '}
+              <span className='underline'>Chef {recipe.user.username}</span>
+            </a>
             |<p>Updated on {recipe.createdAt.toISOString()}</p>
           </div>
           <Image

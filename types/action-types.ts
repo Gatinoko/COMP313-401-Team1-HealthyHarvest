@@ -1,3 +1,5 @@
+import { Recipe, User } from '@prisma/client';
+
 /**
  * Custom error type for use in server actions.
  *
@@ -33,18 +35,6 @@ export type RecipeForm = {
   note: string | null;
 };
 
-export type Recipe = {
-  id: string;
-  title: string;
-  imageUrl: string;
-  description: string;
-  servings: number;
-  yieldAmount: number;
-  prepTime: string;
-  cookTime: string;
-  isPublic: boolean;
-  userId: string;
-  ingredients: string;
-  directions: string;
-  note: string;
+export type RecipeWithUser = Recipe & {
+  user: User;
 };

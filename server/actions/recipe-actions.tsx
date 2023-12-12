@@ -59,6 +59,7 @@ export async function getRecipeById(id: string) {
   try {
     const recipe = await prismaClient().recipe.findUnique({
       where: { id },
+      include: { user: true },
     });
     return recipe;
   } catch (error: any) {
