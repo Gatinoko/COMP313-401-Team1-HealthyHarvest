@@ -4,30 +4,50 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { getRecipeById } from '@/server/actions/recipe-actions';
-import { RecipeWithUser } from '@/types/action-types';
+import { RecipeWithUser, RecipeWithUserAndReviews } from '@/types/action-types';
 import ReviewSection from '@/components/review-section/review-section';
+import StarRating from '@/components/rating/starRating';
+import { useContext } from 'react';
+import { AuthContext } from '@/context/auth-context';
 
 const ViewRecipePage = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
-  const [recipe, setRecipe] = useState<RecipeWithUser | null>(null);
+  const [recipe, setRecipe] = useState<RecipeWithUserAndReviews | null>(null);
+  const { authInformation } = useContext(AuthContext);
 
   useEffect(() => {
-    async function recipe() {
-      try {
-        const recipe = (await getRecipeById(params.id)) as RecipeWithUser;
-        setRecipe(recipe);
-        if (!recipe) router.push('/');
-      } catch (error) {
-        router.push('/');
-      }
-    }
-    recipe();
+    init();
   }, []);
+
+  async function init() {
+    try {
+      const recipe = (await getRecipeById(
+        params.id
+      )) as RecipeWithUserAndReviews;
+      setRecipe(recipe);
+      if (!recipe) router.push('/');
+    } catch (error) {
+      router.push('/');
+    }
+  }
 
   function serializeStringArray(rawStringArray: string | null) {
     if (rawStringArray == null) return null;
     const stringArray = JSON.parse(rawStringArray) as string[];
     return stringArray;
+  }
+
+  function calculateReviewScore() {
+    if (!recipe) return 0;
+    if (recipe.reviews.length === 0) return 0;
+
+    let total = 0;
+    recipe.reviews.forEach((review) => {
+      total += review.rating;
+    });
+
+    const result = Math.floor(total / recipe.reviews.length);
+    return result;
   }
 
   return (
@@ -36,7 +56,13 @@ const ViewRecipePage = ({ params }: { params: { id: string } }) => {
         <React.Fragment>
           <h1 className='text-6xl font-bold'>{recipe.title}</h1>
           <div className='flex gap-3'>
-            <p className='text-xl'>⭐⭐⭐⭐⭐ 4.7 (20)</p>|<p>17 Reviews</p>
+            <StarRating
+              totalStars={5}
+              readOnly={true}
+              ratingValue={calculateReviewScore()}
+              onRatingChange={null}
+            />
+            |<p>{recipe.reviews.length} Reviews</p>
           </div>
           <p>{recipe.description}</p>
           <div className='flex gap-3 text-xl'>
@@ -98,8 +124,16 @@ const ViewRecipePage = ({ params }: { params: { id: string } }) => {
               <p>{recipe.note}</p>
             </div>
           )}
-          <h2 className='text-5xl font-bold mt-8 mb-4'>Reviews (17)</h2>
-          <ReviewSection recipeId={recipe.id} />
+          <h2 className='text-5xl font-bold mt-8 mb-4'>
+            Reviews ({recipe.reviews.length})
+          </h2>
+          <ReviewSection
+            userId={authInformation?.id}
+            recipeId={recipe.id}
+            onResetReviews={() => {
+              init();
+            }}
+          />
         </React.Fragment>
       )}
     </main>

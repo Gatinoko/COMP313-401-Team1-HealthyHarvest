@@ -1,4 +1,4 @@
-import { Recipe, User } from '@prisma/client';
+import { Recipe, Review, User } from '@prisma/client';
 
 /**
  * Custom error type for use in server actions.
@@ -49,4 +49,13 @@ export type UpdateReviewForm = {
 
 export type RecipeWithUser = Recipe & {
   user: User;
+};
+
+export type ReviewsWithUser = Review & {
+  user: User;
+};
+
+export type RecipeWithUserAndReviews = Recipe & {
+  user: User;
+  reviews: Review[];
 };

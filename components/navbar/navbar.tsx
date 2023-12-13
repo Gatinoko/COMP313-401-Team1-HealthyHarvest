@@ -98,8 +98,8 @@ export default function Navbar({ jwtToken }: NavigationProps) {
                 <DropdownItem key='profile' className='h-14 gap-2'>
                   <a href='/profile' className='font-semibold'>
                     {`Welcome, ${authInformation.username}!`}
+                    <p className=' text-green-500'>{authInformation.email}</p>
                   </a>
-                  <p className=' text-green-500'>{authInformation.email}</p>
                 </DropdownItem>
                 {/* Create Recipe */}
                 <DropdownItem key='create-recipe'>

@@ -29,7 +29,10 @@ export async function createReview(data: CreateReviewForm) {
         cause: 'DB_ERROR',
       };
     }
-    const newReview = await prismaClient().review.create({ data: formValues });
+    const newReview = await prismaClient().review.create({
+      data: formValues,
+      include: { user: true },
+    });
     console.log('created review', newReview);
     return newReview;
   } catch (error: any) {
@@ -73,6 +76,7 @@ export async function getReviewsByRecipe(recipeId: string) {
     console.log('getReviewsByRecipe ' + recipeId);
     const reviews = await prismaClient().review.findMany({
       where: { recipeId: recipeId },
+      include: { user: true },
     });
 
     console.log("return recipe's reviews " + recipeId);

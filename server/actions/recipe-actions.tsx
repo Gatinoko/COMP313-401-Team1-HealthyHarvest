@@ -59,7 +59,7 @@ export async function getRecipeById(id: string) {
   try {
     const recipe = await prismaClient().recipe.findUnique({
       where: { id },
-      include: { user: true },
+      include: { user: true, reviews: true },
     });
     return recipe;
   } catch (error: any) {
@@ -75,6 +75,7 @@ export async function getRecipesByUser(userId: string) {
     console.log('getRecipesByUser ' + userId);
     const recipes = await prismaClient().recipe.findMany({
       where: { userId: userId },
+      include: { user: true, reviews: true },
     });
     console.log("return user's recipes " + userId);
     return recipes;
@@ -91,7 +92,7 @@ export async function getAllRecipes() {
   try {
     console.log('getAllRecipes');
     const recipes = await prismaClient().recipe.findMany({
-      include: { user: true },
+      include: { user: true, reviews: true },
     });
     console.log('return recipes');
     return recipes;

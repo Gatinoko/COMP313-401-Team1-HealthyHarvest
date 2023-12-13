@@ -4,17 +4,19 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { getRecipesByUser } from '@/server/actions/recipe-actions';
-import { Recipe, User } from '@prisma/client';
+import { Recipe, Review, User } from '@prisma/client';
 import { getUserById } from '@/server/actions/user-actions';
 import { useContext } from 'react';
 import { AuthContext } from '@/context/auth-context';
 import { Button } from '@nextui-org/react';
 import Link from 'next/link';
+import { RecipeWithUserAndReviews } from '@/types/action-types';
+import StarRating from '@/components/rating/starRating';
 
 const ViewUserRecipesPage = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
-  const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [recipes, setRecipes] = useState<RecipeWithUserAndReviews[]>([]);
   const userId = params.id;
   const { authInformation } = useContext(AuthContext);
 
@@ -38,14 +40,27 @@ const ViewUserRecipesPage = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     async function recipes() {
       if (user) {
-        const allRecipes = await getRecipesByUser(userId);
-        if (Array.isArray(allRecipes)) {
-          setRecipes(allRecipes);
-        }
+        const allRecipes = (await getRecipesByUser(
+          userId
+        )) as RecipeWithUserAndReviews[];
+        setRecipes(allRecipes);
       }
     }
     recipes();
   }, [user]);
+
+  function calculateReviewScore(reviews: Review[]) {
+    if (!reviews) return 0;
+    if (reviews.length === 0) return 0;
+
+    let total = 0;
+    reviews.forEach((review) => {
+      total += review.rating;
+    });
+
+    const result = Math.floor(total / reviews.length);
+    return result;
+  }
 
   return (
     <main className='mt-4 container mx-auto'>
@@ -57,7 +72,7 @@ const ViewUserRecipesPage = ({ params }: { params: { id: string } }) => {
               : `${user.firstName}'s Recipes`}
           </h1>
           <div className='grid grid-cols-3 mt-4 gap-2'>
-            {recipes.map(({ id, title, imageUrl }) => (
+            {recipes.map(({ id, title, imageUrl, user, reviews }) => (
               <div
                 key={id}
                 className='cursor-pointer border w-fit p-3'
@@ -70,7 +85,13 @@ const ViewUserRecipesPage = ({ params }: { params: { id: string } }) => {
                   width={350}
                 />
                 <h2 className='font-semibold mt-2'>{title}</h2>
-                <p>⭐⭐⭐⭐⭐ 20 Ratings</p>
+                <StarRating
+                  totalStars={5}
+                  readOnly={true}
+                  ratingValue={calculateReviewScore(reviews)}
+                  onRatingChange={null}
+                />
+                <p>Made by {user.username}</p>
                 {authInformation?.id === user.id && (
                   <div className='flex gap-2 mt-4'>
                     <Button
