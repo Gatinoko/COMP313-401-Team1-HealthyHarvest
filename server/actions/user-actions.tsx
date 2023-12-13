@@ -9,6 +9,7 @@ import jwt from 'jsonwebtoken';
 import { MAX_AGE, TOKEN_SECRET } from '@/auth/auth-config';
 import { cookies } from 'next/headers';
 import { revalidatePath } from 'next/cache';
+import { User } from '@prisma/client';
 
 /**
  * Server action for the user sign-up form.
@@ -182,4 +183,119 @@ export async function getUserById(userId: string) {
       cause: 'DB_ERROR',
     } as Error;
   }
+}
+
+/**
+ * Server action for the user sign-up form.
+ *
+ * @param {FormData} data - Client form data.
+ */
+export async function updateProfile(data: FormData, userId: string) {
+  const jwtToken = cookies().get('token');
+  if (!jwtToken)
+    return {
+      message: 'Error. Please login first.',
+      cause: 'NOT_AUTHENTICATED',
+    } as Error;
+
+  const initialUserInfo = jwt.decode(jwtToken?.value as string) as User;
+
+  // Assigns form values to object
+  const formValues = {
+    firstName: data.get('firstName') as string,
+    lastName: data.get('lastName') as string,
+    email: data.get('email') as string,
+    username: data.get('username') as string,
+    password: data.get('password') as string,
+  };
+
+  // Zod form schema validation
+  createUserSchema.parse(formValues);
+
+  // User variable to be used in credential validation
+  let user;
+
+  if (initialUserInfo.email != formValues.email) {
+    // Queries database to check if email is already registered
+    try {
+      user = await prismaClient().user.findUnique({
+        where: {
+          email: formValues.email,
+        },
+      });
+    } catch (error: any) {
+      return {
+        message: error.message,
+        cause: 'DB_ERROR',
+      } as Error;
+    }
+    // Returns error if email already exists
+    if (user !== null)
+      return {
+        message: 'Error. This email is already registered.',
+        cause: 'EMAIL_ALREADY_EXISTS',
+      } as Error;
+  }
+
+  if (initialUserInfo.username != formValues.username) {
+    try {
+      user = await prismaClient().user.findUnique({
+        where: {
+          username: formValues.username,
+        },
+      });
+    } catch (error: any) {
+      return {
+        message: error.message,
+        cause: 'DB_ERROR',
+      } as Error;
+    }
+
+    // Returns error if username already exists
+    if (user !== null)
+      return {
+        message: 'Error. This username is already taken.',
+        cause: 'USERNAME_ALREADY_EXISTS',
+      } as Error;
+  }
+  // Queries database to check if username already exists
+
+  // If all checks passed, create user database operation
+  try {
+    await prismaClient().user.update({
+      data: formValues,
+      where: { id: initialUserInfo.id },
+    });
+  } catch (error: any) {
+    console.log(error);
+    return {
+      message: 'Database error.',
+      cause: 'DB_ERROR',
+    } as Error;
+  }
+
+  try {
+    const token = jwt.sign(
+      {
+        id: initialUserInfo.id,
+        firstName: formValues.firstName,
+        lastName: formValues.lastName,
+        email: formValues.email,
+        username: formValues.username,
+      },
+      TOKEN_SECRET
+    );
+    cookies().set('token', token, {
+      maxAge: MAX_AGE,
+    });
+    passport.authenticate('jwt');
+  } catch (error: any) {
+    return {
+      message: 'Authentication error.',
+      cause: 'AUTH_ERROR',
+    } as Error;
+  }
+
+  // Redirects user to home page
+  redirect('/');
 }

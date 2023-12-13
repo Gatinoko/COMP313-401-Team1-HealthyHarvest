@@ -16,7 +16,6 @@ import {
   Input,
   Image,
 } from '@nextui-org/react';
-import magnifyingGlassIcon from '@/public/icons/magnifying-glass-solid.svg';
 import { useRouter } from 'next/navigation';
 ('./login-signup-buttons/nav-content');
 import { useContext } from 'react';
@@ -97,9 +96,9 @@ export default function Navbar({ jwtToken }: NavigationProps) {
               <DropdownMenu aria-label='Profile Actions' variant='flat'>
                 {/* User profile */}
                 <DropdownItem key='profile' className='h-14 gap-2'>
-                  <p className='font-semibold'>
+                  <a href='/profile' className='font-semibold'>
                     {`Welcome, ${authInformation.username}!`}
-                  </p>
+                  </a>
                   <p className=' text-green-500'>{authInformation.email}</p>
                 </DropdownItem>
                 {/* Create Recipe */}
