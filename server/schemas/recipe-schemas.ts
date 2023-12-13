@@ -1,19 +1,4 @@
 import { z } from 'zod';
-
-/**
- * Zod schema for ingredients object
- */
-const ingredientSchema = z.object({
-  text: z.string(),
-});
-
-/**
- * Zod schema for directions object
- */
-const directionSchema = z.object({
-  text: z.string(),
-});
-
 /**
  *Zod schema for creating a recipe
  */

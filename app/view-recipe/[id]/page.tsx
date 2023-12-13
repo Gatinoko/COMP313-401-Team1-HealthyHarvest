@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { getRecipeById } from '@/server/actions/recipe-actions';
 import { RecipeWithUser } from '@/types/action-types';
+import ReviewSection from '@/components/review-section/review-section';
 
 const ViewRecipePage = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
@@ -43,7 +44,7 @@ const ViewRecipePage = ({ params }: { params: { id: string } }) => {
               Recipe by{' '}
               <span className='underline'>Chef {recipe.user.username}</span>
             </a>
-            |<p>Updated on {recipe.createdAt.toISOString()}</p>
+            |<p>Updated on {recipe.createdAt.toLocaleDateString()}</p>
           </div>
           <Image
             alt='food image'
@@ -98,7 +99,7 @@ const ViewRecipePage = ({ params }: { params: { id: string } }) => {
             </div>
           )}
           <h2 className='text-5xl font-bold mt-8 mb-4'>Reviews (17)</h2>
-          <p>In construction</p>
+          <ReviewSection recipeId={recipe.id} />
         </React.Fragment>
       )}
     </main>

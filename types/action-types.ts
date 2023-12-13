@@ -35,6 +35,18 @@ export type RecipeForm = {
   note: string | null;
 };
 
+export type CreateReviewForm = {
+  text: string;
+  rating: number;
+  userId: string;
+  recipeId: string;
+};
+
+export type UpdateReviewForm = {
+  text: string;
+  rating: number;
+};
+
 export type RecipeWithUser = Recipe & {
   user: User;
 };
