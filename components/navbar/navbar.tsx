@@ -16,7 +16,6 @@ import {
   Input,
   Image,
 } from '@nextui-org/react';
-import magnifyingGlassIcon from '@/public/icons/magnifying-glass-solid.svg';
 import { useRouter } from 'next/navigation';
 ('./login-signup-buttons/nav-content');
 import { useContext } from 'react';
@@ -35,7 +34,7 @@ export default function Navbar({ jwtToken }: NavigationProps) {
 
   // Logout button handler function
   async function logoutButtonHandler() {
-    await fetch('http://localhost:3000/api/auth', {
+    await fetch('/api/auth', {
       method: 'DELETE',
     });
     router.refresh();
@@ -46,6 +45,7 @@ export default function Navbar({ jwtToken }: NavigationProps) {
     if (jwtToken)
       setAuthInformation({
         isAuthenticated: true,
+        id: jwtToken.id,
         firstName: jwtToken.firstName,
         lastName: jwtToken.lastName,
         email: jwtToken.email,
@@ -96,10 +96,10 @@ export default function Navbar({ jwtToken }: NavigationProps) {
               <DropdownMenu aria-label='Profile Actions' variant='flat'>
                 {/* User profile */}
                 <DropdownItem key='profile' className='h-14 gap-2'>
-                  <p className='font-semibold'>
+                  <a href='/profile' className='font-semibold'>
                     {`Welcome, ${authInformation.username}!`}
-                  </p>
-                  <p className=' text-green-500'>{authInformation.email}</p>
+                    <p className=' text-green-500'>{authInformation.email}</p>
+                  </a>
                 </DropdownItem>
                 {/* Create Recipe */}
                 <DropdownItem key='create-recipe'>
@@ -110,6 +110,17 @@ export default function Navbar({ jwtToken }: NavigationProps) {
                     color='primary'
                   >
                     Create Recipe
+                  </Button>
+                </DropdownItem>
+                {/* View Owned Recipes */}
+                <DropdownItem key='view-own-recipes'>
+                  <Button
+                    className='flex justify-center'
+                    as={Link}
+                    href={`/view-user-recipes/${authInformation.id}`}
+                    color='secondary'
+                  >
+                    View Owned Recipes
                   </Button>
                 </DropdownItem>
                 {/* Logout button */}

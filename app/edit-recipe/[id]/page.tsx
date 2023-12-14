@@ -14,12 +14,19 @@ import { FormEvent, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useContext } from 'react';
 import { AuthContext } from '@/context/auth-context';
-import { createRecipe } from '@/server/actions/recipe-actions';
+import {
+  createRecipe,
+  getRecipeById,
+  updateRecipe,
+} from '@/server/actions/recipe-actions';
 import { useRouter } from 'next/navigation';
 import { UploadButton } from '@/util/uploadthing';
+import { Recipe } from '@prisma/client';
 
-export default function CreateRecipe() {
+export default function EditRecipe({ params }: { params: { id: string } }) {
   const { authInformation } = useContext(AuthContext);
+  const recipeId = params.id;
+  const router = useRouter();
 
   type BodyType = {
     title: string;
@@ -46,12 +53,56 @@ export default function CreateRecipe() {
     note: '',
     userId: '',
   });
+
   useEffect(() => {
-    if (authInformation) {
-      const bodyClone = { ...body };
-      bodyClone.userId = authInformation.id + '';
-      setBody(bodyClone);
+    async function init() {
+      console.log('hit init');
+      if (authInformation) {
+        console.log('hit init if statement');
+        const recipe = (await getRecipeById(recipeId)) as Recipe;
+        if (!recipe.id) {
+          console.error(`Recipe ${recipeId} not found`);
+          router.push('/');
+        }
+
+        // update the recipe body state
+        const bodyClone = { ...body };
+        const {
+          title,
+          description,
+          imageUrl,
+          cookTime,
+          prepTime,
+          servings,
+          yieldAmount,
+          note,
+          isPublic,
+          ingredients,
+          directions,
+          userId,
+        } = recipe;
+        bodyClone.title = title;
+        bodyClone.description = description;
+        bodyClone.imageUrl = imageUrl + '';
+        bodyClone.cookTime = cookTime;
+        bodyClone.prepTime = prepTime;
+        bodyClone.servings = servings;
+        bodyClone.yieldAmount = yieldAmount;
+        bodyClone.note = note + '';
+        bodyClone.isPublic = isPublic;
+        bodyClone.userId = userId;
+
+        console.log(recipe);
+        console.log(bodyClone);
+
+        setBody(() => bodyClone);
+        const ingredientsParsed = JSON.parse(ingredients + '') as string[];
+        const directionsParsed = JSON.parse(directions + '') as string[];
+        setIngredients(ingredientsParsed);
+        setDirections(directionsParsed);
+      }
     }
+    init();
   }, [authInformation]);
 
   const [ingredients, setIngredients] = useState<string[]>([
@@ -88,8 +139,6 @@ export default function CreateRecipe() {
     setDirections((prev) => directionsClone);
   }
 
-  const router = useRouter();
-
   async function submitForm(e: FormEvent) {
     e.preventDefault();
 
@@ -97,7 +146,7 @@ export default function CreateRecipe() {
     const newBody = { ...bodyClone, ingredients, directions };
 
     try {
-      await createRecipe(newBody);
+      await updateRecipe(recipeId, newBody);
       router.push('/');
     } catch (error) {
       console.log(error);
@@ -106,7 +155,7 @@ export default function CreateRecipe() {
 
   return (
     <main className='mt-4 container mx-auto flex flex-col gap-4'>
-      <h1 className='text-5xl my-4'>Create Recipe</h1>
+      <h1 className='text-5xl my-4'>Edit Recipe</h1>
       <form onSubmit={(e) => submitForm(e)} className='flex gap-8'>
         {/* Recipe General Description */}
         <div className='flex w-1/2 flex-col gap-4 mb-56'>
@@ -114,6 +163,7 @@ export default function CreateRecipe() {
             <Input
               type='text'
               name='title'
+              value={body.title}
               onChange={(e) => handleChange(e)}
               label='Recipe Title'
               placeholder='recipe title'
@@ -142,6 +192,7 @@ export default function CreateRecipe() {
           </div>
           <Textarea
             name='description'
+            value={body.description}
             onChange={(e) => handleChange(e)}
             type='text'
             label='Recipe Description'
@@ -215,6 +266,7 @@ export default function CreateRecipe() {
           <div className='flex w-full flex-wrap sm:flex-nowrap mb-6 md:mb-0 gap-4'>
             <Input
               name='servings'
+              value={body.servings.toString()}
               onChange={(e) => handleChange(e)}
               type='number'
               label='Servings'
@@ -223,6 +275,7 @@ export default function CreateRecipe() {
             />
             <Input
               name='yieldAmount'
+              value={body.yieldAmount.toString()}
               type='number'
               onChange={(e) => handleChange(e)}
               label='Yield (Optional)'

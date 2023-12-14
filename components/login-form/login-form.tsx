@@ -6,54 +6,55 @@ import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 
 export default function LoginForm() {
-	// Router
-	const router = useRouter();
+  // Router
+  const router = useRouter();
 
-	// HTML form element reference
-	const formElementRef = useRef<HTMLFormElement>(null);
+  // HTML form element reference
+  const formElementRef = useRef<HTMLFormElement>(null);
 
-	// Error message
-	const [errorMessage, setErrorMessage] = useState<string>('‎ ');
+  // Error message
+  const [errorMessage, setErrorMessage] = useState<string>('‎ ');
 
-	// Login form handler function
-	async function loginFormHandler(formData: FormData) {
-		const serverResponse = await loginUser(formData);
-		if (serverResponse) setErrorMessage(serverResponse.message);
-		else {
-			formElementRef.current?.reset();
-			setErrorMessage('‎ ');
-			router.refresh();
-		}
-	}
+  // Login form handler function
+  async function loginFormHandler(formData: FormData) {
+    const serverResponse = await loginUser(formData);
+    if (serverResponse) setErrorMessage(serverResponse.message);
+    else {
+      formElementRef.current?.reset();
+      setErrorMessage('‎ ');
+      router.push('/');
+    }
+  }
 
-	return (
-		<form
-			ref={formElementRef}
-			className='flex flex-col gap-2'
-			action={loginFormHandler}>
-			{/* Email input field */}
-			<Input
-				key='email'
-				type='text'
-				label='Email'
-				name='email'
-				isRequired={true}
-			/>
+  return (
+    <form
+      ref={formElementRef}
+      className='flex flex-col gap-2'
+      action={loginFormHandler}
+    >
+      {/* Email input field */}
+      <Input
+        key='email'
+        type='text'
+        label='Email'
+        name='email'
+        isRequired={true}
+      />
 
-			{/* Password input field */}
-			<Input
-				key='password'
-				type='password'
-				label='Password'
-				name='password'
-				isRequired={true}
-			/>
+      {/* Password input field */}
+      <Input
+        key='password'
+        type='password'
+        label='Password'
+        name='password'
+        isRequired={true}
+      />
 
-			{/* Form error message */}
-			<p className='text-red-500'>{errorMessage}</p>
+      {/* Form error message */}
+      <p className='text-red-500'>{errorMessage}</p>
 
-			{/* Login button */}
-			<Button type='submit'>Login</Button>
-		</form>
-	);
+      {/* Login button */}
+      <Button type='submit'>Login</Button>
+    </form>
+  );
 }

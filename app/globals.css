@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.star {
+  cursor: pointer;
+  color: gold;
+  font-size: 50px;
+}
+
+.star:hover {
+  transform: scale(1.2);
+}

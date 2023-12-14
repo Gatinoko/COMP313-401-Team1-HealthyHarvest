@@ -18,38 +18,38 @@ model User {
   email        String   @unique
   username     String   @unique
   password     String
-  Recipes       Recipe[]
+  recipes      Recipe[]
+  reviews      Review[]
 }
 
 model Recipe {
-  id          String       @id @default(uuid())
-  title       String
-  imageUrl    String?
-  description String?
-  servings    Int?
-  yield       String?
-  prepTime    String?
-  cookTime    String?
-  public      Boolean      @default(true)
-  userId      String
-  user        User         @relation(fields: [userId], references: [id])
-  ingredients Ingredient[]
-  directions  Direction[]
-  note        String?
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id           String    @id @default(uuid())
+  title        String
+  imageUrl     String?
+  description  String
+  servings     Int
+  yieldAmount  Int
+  prepTime     String
+  cookTime     String
+  isPublic     Boolean   @default(true)
+  userId       String
+  user         User      @relation(fields: [userId], references: [id])
+  ingredients  String?
+  directions   String?
+  note         String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  reviews      Review[]
 }
 
-model Ingredient {
-  id       String @id @default(uuid())
-  text     String
-  recipeId String
-  recipe   Recipe @relation(fields: [recipeId], references: [id])
-}
-
-model Direction {
-  id       String @id @default(uuid())
-  step     String
-  recipeId String
-  recipe   Recipe @relation(fields: [recipeId], references: [id])
+model Review {
+  id         String   @id @default(uuid())
+  text       String
+  rating     Int      
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  recipeId   String
+  recipe     Recipe   @relation(fields: [recipeId], references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
