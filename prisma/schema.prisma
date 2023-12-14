@@ -8,6 +8,7 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model User {
@@ -45,7 +46,7 @@ model Recipe {
 model Review {
   id         String   @id @default(uuid())
   text       String
-  rating     Int      
+  rating     Int
   userId     String
   user       User     @relation(fields: [userId], references: [id])
   recipeId   String
