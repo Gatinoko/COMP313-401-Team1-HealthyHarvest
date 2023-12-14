@@ -1,13 +1,31 @@
 'use client';
 
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import { NextUIProvider } from '@nextui-org/react';
 import AuthContextProvider from '@/context/auth-context';
+import { RequestCookie } from 'next/dist/compiled/@edge-runtime/cookies';
+import { DecodedJwtPayload } from '@/types/action-types';
 
-export const Providers = ({ children }: { children: React.ReactNode }) => {
+export type ProvidersProps = {
+	decodedJwtPayload: DecodedJwtPayload;
+} & PropsWithChildren;
+
+export const Providers = ({ decodedJwtPayload, children }: ProvidersProps) => {
 	return (
 		<NextUIProvider>
-			<AuthContextProvider>{children}</AuthContextProvider>
+			<AuthContextProvider
+				defaultAuthInformationValue={
+					decodedJwtPayload
+						? {
+								isAuthenticated: true,
+								...decodedJwtPayload,
+						  }
+						: {
+								isAuthenticated: false,
+						  }
+				}>
+				{children}
+			</AuthContextProvider>
 		</NextUIProvider>
 	);
 };
