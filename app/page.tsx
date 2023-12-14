@@ -56,12 +56,15 @@ export default function Home() {
               width={350}
             />
             <h2 className='font-semibold mt-2'>{title}</h2>
-            <StarRating
-              totalStars={5}
-              readOnly={true}
-              ratingValue={calculateReviewScore(reviews)}
-              onRatingChange={null}
-            />
+            <div className='flex gap-2 items-center'>
+              <StarRating
+                totalStars={5}
+                readOnly={true}
+                ratingValue={calculateReviewScore(reviews)}
+                onRatingChange={null}
+              />
+              <span className='text-2xl'>({reviews.length})</span>
+            </div>
             <p>Made by {user.username}</p>
           </div>
         ))}

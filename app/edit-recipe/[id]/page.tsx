@@ -31,13 +31,13 @@ export default function EditRecipe({ params }: { params: { id: string } }) {
   type BodyType = {
     title: string;
     description: string;
-    imageUrl: string | null;
+    imageUrl: string;
     servings: number;
     yieldAmount: number;
     isPublic: boolean;
     prepTime: string;
     cookTime: string;
-    note: string | null;
+    note: string;
     userId: string;
   };
 
@@ -50,7 +50,7 @@ export default function EditRecipe({ params }: { params: { id: string } }) {
     isPublic: true,
     prepTime: '20mins',
     cookTime: '10mins',
-    note: 'Optional',
+    note: '',
     userId: '',
   });
 
@@ -83,12 +83,12 @@ export default function EditRecipe({ params }: { params: { id: string } }) {
         } = recipe;
         bodyClone.title = title;
         bodyClone.description = description;
-        bodyClone.imageUrl = imageUrl;
+        bodyClone.imageUrl = imageUrl + '';
         bodyClone.cookTime = cookTime;
         bodyClone.prepTime = prepTime;
         bodyClone.servings = servings;
         bodyClone.yieldAmount = yieldAmount;
-        bodyClone.note = note;
+        bodyClone.note = note + '';
         bodyClone.isPublic = isPublic;
         bodyClone.userId = userId;
 
@@ -313,30 +313,16 @@ export default function EditRecipe({ params }: { params: { id: string } }) {
           </div>
           <Divider />
           {/* Recipe Note */}
-          <h3 className='text-2xl my-3'>Note (Optional)</h3>
-          <Button
-            color='danger'
-            variant='bordered'
-            className='w-fit text-black'
-            size='lg'
-            startContent={
-              <Image
-                alt='search icon'
-                src='/icons/plus-solid.svg'
-                width={20}
-                height={20}
-              />
-            }
-          >
-            Add Note
-          </Button>
+          <Textarea
+            name='note'
+            value={body.note}
+            onChange={(e) => handleChange(e)}
+            type='text'
+            label='Note (Optional)'
+            placeholder='recipe note'
+            labelPlacement='outside'
+          />
           <Divider />
-          {/* Recipe Accessibility */}
-          <h3 className='text-2xl mt-3'>Make this recipe public?</h3>
-          <RadioGroup>
-            <Radio value='true'>Yes, make it accessible for everyone</Radio>
-            <Radio value='false'>No, I want to keep it private</Radio>
-          </RadioGroup>
           {/* Buttons */}
           <div className='flex justify-end w-full flex-wrap sm:flex-nowrap mb-6 md:mb-0 gap-4'>
             <Button size='lg' variant='light'>

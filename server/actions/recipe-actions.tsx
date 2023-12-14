@@ -163,20 +163,20 @@ export async function updateRecipe(recipeId: string, data: RecipeForm) {
 }
 
 //delete a recipe
-export async function deleteRecipe(
-  recipeId: string,
-  currentUser: { userId: string }
-) {
+export async function deleteRecipe(recipeId: string, userId: string) {
   const recipe = await prismaClient().recipe.findUnique({
     where: { id: recipeId },
   });
 
   if (!recipe) {
     return { message: 'Recipe not found.', cause: 'NOT_FOUND' };
-  } else if (recipe.userId !== currentUser.userId) {
+  } else if (recipe.userId !== userId) {
     return { message: 'Unauthorized access.', cause: 'UNAUTHORIZED' };
   }
   try {
+    await prismaClient().review.deleteMany({
+      where: { recipeId: recipeId },
+    });
     await prismaClient().recipe.delete({
       where: { id: recipeId },
     });

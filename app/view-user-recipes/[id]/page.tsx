@@ -3,7 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { getRecipesByUser } from '@/server/actions/recipe-actions';
+import {
+  deleteRecipe,
+  getRecipesByUser,
+} from '@/server/actions/recipe-actions';
 import { Recipe, Review, User } from '@prisma/client';
 import { getUserById } from '@/server/actions/user-actions';
 import { useContext } from 'react';
@@ -62,6 +65,12 @@ const ViewUserRecipesPage = ({ params }: { params: { id: string } }) => {
     return result;
   }
 
+  async function handleDelete(recipeId: string, userId: string) {
+    await deleteRecipe(recipeId, userId);
+    const filterRecipes = recipes.filter((recipe) => recipe.id != recipeId);
+    setRecipes(filterRecipes);
+  }
+
   return (
     <main className='mt-4 container mx-auto'>
       {user && (
@@ -85,12 +94,15 @@ const ViewUserRecipesPage = ({ params }: { params: { id: string } }) => {
                   width={350}
                 />
                 <h2 className='font-semibold mt-2'>{title}</h2>
-                <StarRating
-                  totalStars={5}
-                  readOnly={true}
-                  ratingValue={calculateReviewScore(reviews)}
-                  onRatingChange={null}
-                />
+                <div className='flex gap-2 items-center'>
+                  <StarRating
+                    totalStars={5}
+                    readOnly={true}
+                    ratingValue={calculateReviewScore(reviews)}
+                    onRatingChange={null}
+                  />
+                  <span className='text-2xl'>({reviews.length})</span>
+                </div>
                 <p>Made by {user.username}</p>
                 {authInformation?.id === user.id && (
                   <div className='flex gap-2 mt-4'>
@@ -102,7 +114,12 @@ const ViewUserRecipesPage = ({ params }: { params: { id: string } }) => {
                     >
                       Edit
                     </Button>
-                    <Button color='danger'>Delete</Button>
+                    <Button
+                      color='danger'
+                      onClick={() => handleDelete(id, user.id)}
+                    >
+                      Delete
+                    </Button>
                   </div>
                 )}
               </div>
