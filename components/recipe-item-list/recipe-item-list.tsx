@@ -8,6 +8,8 @@ export type RecipeItemListProps = {};
 export async function RecipeItemList(props: RecipeItemListProps) {
 	const allRecipes = await getAllRecipes();
 
+	console.log(allRecipes);
+
 	return (
 		<ul className='grid grid-cols-3 mt-4 gap-2'>
 			{Array.isArray(allRecipes) &&
