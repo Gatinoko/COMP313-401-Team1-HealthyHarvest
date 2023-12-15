@@ -93,12 +93,15 @@ export async function getRecipesByUser(userId: string) {
 	}
 }
 
+/**
+ * Server action for getting an array of all application recipes.
+ */
 export async function getAllRecipes() {
 	try {
-		const recipes = await prismaClient().recipe.findMany({
+		const allRecipes = await prismaClient().recipe.findMany({
 			include: { user: true, reviews: true },
 		});
-		return recipes as RecipeWithUserAndReviews[];
+		return allRecipes as RecipeWithUserAndReviews[];
 	} catch (error: any) {
 		return {
 			message: error.message,
