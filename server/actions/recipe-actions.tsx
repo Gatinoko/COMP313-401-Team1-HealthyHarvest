@@ -79,18 +79,19 @@ export async function getRecipeById(id: string) {
 	}
 }
 
-//Get recipes by user
+/**
+ * Server action for getting a specific user's recipes.
+ *
+ * @param {string} id - Id of the user to-be affected by the action.
+ */
 export async function getRecipesByUser(userId: string) {
 	try {
-		console.log('getRecipesByUser ' + userId);
-		const recipes = await prismaClient().recipe.findMany({
+		const userRecipes = await prismaClient().recipe.findMany({
 			where: { userId: userId },
 			include: { user: true, reviews: true },
 		});
-		console.log("return user's recipes " + userId);
-		return recipes;
+		return userRecipes as RecipeWithUserAndReviews[];
 	} catch (error: any) {
-		console.log(error);
 		return {
 			message: error.message,
 			cause: 'DB_ERROR',
