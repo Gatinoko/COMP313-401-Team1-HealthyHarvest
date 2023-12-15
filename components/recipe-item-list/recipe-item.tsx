@@ -1,6 +1,6 @@
 'use client';
 
-import StarRating from '../rating/starRating';
+import { StarRating } from '../rating/starRating';
 import Image from 'next/image';
 import { Review, User } from '@prisma/client';
 import { useRouter } from 'next/navigation';
@@ -37,35 +37,47 @@ export function RecipeItem({
 		}
 	}
 
+	// Handler for the onClick event on a recipe item
+	function recipeItemClickHandler() {
+		router.push('/view-recipe/' + id);
+	}
+
 	return (
 		<li
 			key={id}
-			className='cursor-pointer border w-fit p-3'
-			onClick={() => router.push('/view-recipe/' + id)}>
+			className='flex flex-col w-full h-fit gap-2 p-4 bg-success-100 rounded-3xl cursor-pointer'
+			onClick={recipeItemClickHandler}>
 			{/* Item image */}
-			<Image
-				src={imageUrl}
-				alt='recipe'
-				height={200}
-				width={350}
-			/>
-
-			{/* Item title */}
-			<h2 className='font-semibold mt-2'>{title}</h2>
-
-			{/* Star rating */}
-			<div className='flex gap-2 items-center'>
-				<StarRating
-					totalStars={5}
-					readOnly={true}
-					ratingValue={calculateReviewScore(reviews)}
-					onRatingChange={null}
+			<div
+				className='overflow-hidden rounded-2xl select-none'
+				style={{ position: 'relative', width: '100%', height: '200px' }}>
+				<Image
+					src={imageUrl}
+					alt='recipe'
+					sizes='100%'
+					fill
+					style={{
+						objectFit: 'cover',
+					}}
 				/>
-				<span className='text-2xl'>({reviews.length})</span>
 			</div>
 
-			{/* "Made by" text */}
-			<p>Made by {user.username}</p>
+			{/* Item title */}
+			<h4 className='font-semibold text-xl truncate'>{title}</h4>
+
+			{/* Star rating and recipe creator text */}
+			<div className='flex flex-col rounded-2xl p-2 bg-success-50 '>
+				{/* Star rating */}
+				<StarRating
+					totalStars={5}
+					isReadOnly={true}
+					defaultRatingValue={calculateReviewScore(reviews)}
+					numberOfReviews={reviews.length}
+				/>
+
+				{/* "Made by" text */}
+				<p className='truncate'>Made by {user.username}</p>
+			</div>
 		</li>
 	);
 }
