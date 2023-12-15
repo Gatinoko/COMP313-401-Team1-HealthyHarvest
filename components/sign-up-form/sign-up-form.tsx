@@ -24,7 +24,7 @@ export default function SignUpForm() {
 	return (
 		<div className='bg-success-100 flex flex-col gap-4 rounded-3xl p-6'>
 			{/* Title */}
-			<h1 className='text-3xl font-semibold'>Sign Up</h1>
+			<h1 className='text-3xl font-medium'>Sign Up</h1>
 
 			{/* Horizontal separator */}
 			<hr className='border-success-500' />
