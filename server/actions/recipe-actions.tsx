@@ -59,7 +59,11 @@ export async function createRecipe({
 	}
 }
 
-//Get single recipe by ID
+/**
+ * Server action for getting a specific recipe via its id.
+ *
+ * @param {string} id - Id of the recipe to-be affected by the action.
+ */
 export async function getRecipeById(id: string) {
 	try {
 		const recipe = await prismaClient().recipe.findUnique({
@@ -70,6 +74,7 @@ export async function getRecipeById(id: string) {
 	} catch (error: any) {
 		return {
 			message: error.message,
+			cause: 'DB_ERROR',
 		};
 	}
 }
