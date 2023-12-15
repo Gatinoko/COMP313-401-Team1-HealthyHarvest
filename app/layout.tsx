@@ -22,7 +22,9 @@ export default async function RootLayout({ children }: PropsWithChildren) {
 	const decodedJwtPayload = await getJwtTokenAction();
 
 	return (
-		<html lang='en'>
+		<html
+			lang='en'
+			className='light'>
 			<body className={inter.className}>
 				<Providers decodedJwtPayload={decodedJwtPayload}>
 					<Navbar />

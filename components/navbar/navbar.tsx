@@ -38,9 +38,11 @@ export default function Navbar(props: NavbarProps) {
 		<Navigation>
 			<NavbarBrand
 				as={Link}
-				href='/'>
-				<div className='w-8 h-8 bg-green-400 rounded-md me-2'></div>
-				<p className='font-bold text-inherit'>Healthy Harvest</p>
+				href='/'
+				className='text-default-50 font-bold'>
+				<div className='w-fit py-1 px-2 bg-success-600 rounded-md me-2'>
+					Healthy Harvest
+				</div>
 			</NavbarBrand>
 
 			<NavbarContent
@@ -48,21 +50,31 @@ export default function Navbar(props: NavbarProps) {
 				className='flex gap-4'>
 				{authInformation.isAuthenticated ? (
 					<>
-						{/* Search input */}
-						<NavbarItem className='hidden lg:flex'>
-							<Input
-								className='border rounded-xl'
-								placeholder='Salads, bean soup...'
-								endContent={
-									<Image
-										alt='search icon'
-										src='/icons/magnifying-glass-solid.svg'
-										width={30}
-										height={30}
-									/>
-								}
-							/>
-						</NavbarItem>
+						<div className='flex gap-2'>
+							{/* Sign-up page button */}
+							<NavbarItem>
+								<Button
+									as={Link}
+									size='sm'
+									key='create-recipe'
+									href='/create-recipe'
+									variant='flat'>
+									Create Recipe
+								</Button>
+							</NavbarItem>
+
+							{/* Login page button */}
+							<NavbarItem>
+								<Button
+									as={Link}
+									size='sm'
+									key='view-own-recipes'
+									href={`/view-user-recipes/${authInformation.id}`}
+									variant='flat'>
+									View User Recipes
+								</Button>
+							</NavbarItem>
+						</div>
 
 						{/* Avatar with dropdown menu */}
 						<Dropdown placement='bottom-end'>
@@ -81,29 +93,21 @@ export default function Navbar(props: NavbarProps) {
 							<DropdownMenu
 								aria-label='Profile Actions'
 								variant='flat'>
+								{/* Welcome message */}
+								<DropdownItem
+									key='welcome-message'
+									className='h-14 gap-2'>
+									<p className='text-success-600 font-semibold'>
+										{`Welcome, ${authInformation.username}!`}
+									</p>
+									<p className='font-semibold'>{authInformation.email}</p>
+								</DropdownItem>
+
 								{/* User profile */}
 								<DropdownItem
 									key='profile'
-									className='h-14 gap-2'
 									href='/profile'>
-									<p className='font-semibold'>
-										{`Welcome, ${authInformation.username}!`}
-									</p>
-									{authInformation.email}
-								</DropdownItem>
-
-								{/* Create Recipe */}
-								<DropdownItem
-									key='create-recipe'
-									href='/create-recipe'>
-									Create Recipe
-								</DropdownItem>
-
-								{/* View Owned Recipes */}
-								<DropdownItem
-									key='view-own-recipes'
-									href={`/view-user-recipes/${authInformation.id}`}>
-									View Owned Recipes
+									Profile
 								</DropdownItem>
 
 								{/* Logout button */}
@@ -121,8 +125,10 @@ export default function Navbar(props: NavbarProps) {
 						<NavbarItem>
 							<Button
 								as={Link}
+								size='sm'
 								href='/sign-up'
-								variant='flat'>
+								variant='flat'
+								className='bg-transparent'>
 								Sign Up
 							</Button>
 						</NavbarItem>
@@ -131,8 +137,10 @@ export default function Navbar(props: NavbarProps) {
 						<NavbarItem>
 							<Button
 								as={Link}
+								size='sm'
 								href='/login'
-								variant='flat'>
+								variant='flat'
+								className='bg-transparent'>
 								Login
 							</Button>
 						</NavbarItem>
