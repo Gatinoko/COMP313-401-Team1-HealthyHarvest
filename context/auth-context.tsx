@@ -2,39 +2,48 @@ import React, { PropsWithChildren } from 'react';
 import { createContext, useState } from 'react';
 
 export type AuthInformation = {
-  isAuthenticated: boolean;
-  id: undefined;
-  firstName: undefined;
-  lastName: undefined;
-  email: undefined;
-  username: undefined;
+	isAuthenticated: boolean;
+	id?: string;
+	firstName?: string;
+	lastName?: string;
+	email?: string;
+	username?: string;
 };
 
+export type AuthContextProviderProps = {
+	defaultAuthInformationValue: AuthInformation;
+} & PropsWithChildren;
+
 export const AuthContext = createContext({
-  authInformation: {
-    isAuthenticated: false,
-    id: undefined,
-    firstName: undefined,
-    lastName: undefined,
-    email: undefined,
-    username: undefined,
-  },
-  setAuthInformation: (value: AuthInformation) => {},
+	authInformation: {
+		isAuthenticated: false,
+		id: undefined,
+		firstName: undefined,
+		lastName: undefined,
+		email: undefined,
+		username: undefined,
+	} as AuthInformation,
+	setAuthInformation: (value: AuthInformation) => {},
 });
 
-export default function AuthContextProvider({ children }: PropsWithChildren) {
-  const [authInformation, setAuthInformation] = useState<AuthInformation>({
-    isAuthenticated: false,
-    id: undefined,
-    firstName: undefined,
-    lastName: undefined,
-    email: undefined,
-    username: undefined,
-  });
+export default function AuthContextProvider({
+	defaultAuthInformationValue = {
+		isAuthenticated: false,
+		id: undefined,
+		firstName: undefined,
+		lastName: undefined,
+		email: undefined,
+		username: undefined,
+	},
+	children,
+}: AuthContextProviderProps) {
+	const [authInformation, setAuthInformation] = useState<AuthInformation>(
+		defaultAuthInformationValue
+	);
 
-  return (
-    <AuthContext.Provider value={{ authInformation, setAuthInformation }}>
-      {children}
-    </AuthContext.Provider>
-  );
+	return (
+		<AuthContext.Provider value={{ authInformation, setAuthInformation }}>
+			{children}
+		</AuthContext.Provider>
+	);
 }
