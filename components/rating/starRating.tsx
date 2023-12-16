@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useState } from 'react';
 import { Star } from './star';
 
@@ -5,7 +7,8 @@ export type StarRatingProps = {
 	totalStars: number;
 	isReadOnly: boolean;
 	defaultRatingValue: number;
-	numberOfReviews: number;
+	numberOfReviews: number | false;
+	rightSideText?: string;
 	onRatingChange?: (rating: number) => void;
 };
 
@@ -14,6 +17,7 @@ export function StarRating({
 	defaultRatingValue = 0,
 	isReadOnly = false,
 	numberOfReviews,
+	rightSideText,
 	onRatingChange = undefined,
 }: StarRatingProps) {
 	// State variable with user rating value
@@ -43,9 +47,11 @@ export function StarRating({
 			</div>
 
 			{/* Review number text */}
-			<span className='text-lg font-medium text-warning-400'>
-				({numberOfReviews})
-			</span>
+			{numberOfReviews !== false && (
+				<span className='text-lg font-medium text-warning-400'>
+					{`(${numberOfReviews})`} {rightSideText}
+				</span>
+			)}
 		</div>
 	);
 }
